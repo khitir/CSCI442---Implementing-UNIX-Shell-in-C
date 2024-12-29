@@ -1,0 +1,50 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+DISCLAIMER: This pseudo logic is for giving you an idea to start with.
+The logic is incomplete and not tested. It is your responsibility to
+ensure the correctness of your program.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+prev_pipe[2];
+current_pipe[2];
+
+for each command in the pipeline
+
+	output_fd = STD_OUT
+	input_fd = STD_IN
+	
+	output_type = ?{PIPE, FILE, STD}
+	input_type = ?{PIPE, FILE, STD} 
+	
+	if (output_type == PIPE)
+		pipe(current_pipe)
+		output_fd = current_pipe[1]
+	else if (output_type == FILE)
+		fd = fopen
+		output_fd = fd
+
+	if (input_type == PIPE)
+		input_fd=prev_pipe[0]
+	else if (input_type == FILE)
+		fd=  fopen
+		input_fd = fd
+	
+	fork()
+
+	if child:
+		if input_type != STD:
+			dup2(input_fd, STD_IN)
+		if output_type != STD:
+			dup2(output_fd, STD_OUT)
+		...close fds as necessary...
+		exec()
+		 exit()
+	if parent:
+		...close fds as necessary...
+		wait()
+		 
+	prev_pipe = current_pipe
+
+// end of for loop
+	 
+	 
+	 
